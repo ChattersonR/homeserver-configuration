@@ -1,0 +1,29 @@
+version: '2'
+services:
+  plex:
+    image: plexinc/pms-docker
+    container_name: plex
+    volumes:
+      - /opt/appdata/plex:/config
+      - /mnt/storage:/data
+    network_mode: host
+    restart: always
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+  plexpy:
+    image: linuxserver/plexpy
+    container_name: plexpy
+    depends_on:
+      - plex
+    volumes:
+      - /opt/appdata/plexpy:/config
+      - /opt/appdata/plex/Library/Application\ Support/Plex\ Media\ Server/Logs:/logs:ro
+    ports:
+      - 27029:8181
+    links:
+      - plex
+    restart: always
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}

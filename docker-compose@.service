@@ -1,0 +1,22 @@
+[Unit]
+Description=%i service with docker compose
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+
+WorkingDirectory=/opt
+
+ExecStartPre=/usr/bin/docker-compose -f /opt/docker-compose.yml down -v
+ExecStartPre=/usr/bin/docker-compose rm -fv
+ExecStartPre=-/bin/bash -c 'docker volume ls -qf "%name=%i_" | xargs docker volume rm'
+ExecStartPre=-/bin/bash -c 'docker network ls -qf "%name=%i_" | xargs docker network rm'
+ExecStartPre=-/bin/bash -c 'docker ps -aqf "%name=%i_*" | xargs docker rm'
+
+ExecStart = /usr/bin/docker-compose -f /opt/docker-compose.yml up
+
+ExecStop = /usr/bin/docker-compose -f /opt/docker-compose.yml down -v
+
+[Install]
+WantedBy=multi-user.target
