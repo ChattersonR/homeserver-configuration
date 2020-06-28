@@ -1,0 +1,16 @@
+version: "2.1"
+services:
+  duplicati:
+    image: linuxserver/duplicati
+    container_name: duplicati
+    environment:
+      - PUID=1000
+      - PGID=100
+    volumes:
+      - /opt/appdata/duplicati:/config
+      - /opt/backups:/backups
+      - /srv/e6f583e0-1144-4062-bca6-9bb7e8760523:/source
+      - CLI_ARGS=--log-file=/config/logs.log --log-level=Debug
+    ports:
+      - 8200:8200
+    restart: unless-stopped

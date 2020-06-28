@@ -5,12 +5,11 @@ services:
     container_name: plex
     volumes:
       - /opt/appdata/plex:/config
-      - /mnt/storage:/data
+      - /srv/e6f583e0-1144-4062-bca6-9bb7e8760523/media:/data
     network_mode: host
     restart: always
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
+      - PLEX_GID=100
   plexpy:
     image: linuxserver/plexpy
     container_name: plexpy
@@ -18,7 +17,7 @@ services:
       - plex
     volumes:
       - /opt/appdata/plexpy:/config
-      - /opt/appdata/plex/Library/Application\ Support/Plex\ Media\ Server/Logs:/logs:ro
+      - /srv/e6f583e0-1144-4062-bca6-9bb7e8760523/appdata/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro
     ports:
       - 27029:8181
     links:
